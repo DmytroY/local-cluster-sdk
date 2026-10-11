@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "local-cluster-sdk"
+version = "0.1.0"
+description = "A lightweight SDK bridging local multi-agent workflows and RAM-booted HPC/LLM infrastructure"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    { name = "Dmytro Yakovenko", email = "dmitry.yakovenko@gmail.com" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0.0",
+    "pytest-mock>=3.10.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/local_cluster_sdk"]
