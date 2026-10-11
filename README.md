@@ -12,13 +12,15 @@ This project is useful when you want to run models from a local cluster, or swit
 ## Install
 
 ```bash
-pip install local-cluster-sdk
+pip install git+https://github.com/DmytroY/local-cluster-sdk.git
 ```
 
 For development:
 
 ```bash
-pip install "local-cluster-sdk[test]"
+git clone https://github.com/DmytroY/local-cluster-sdk.git
+cd local-cluster-sdk
+pip install -e ".[test]"
 ```
 
 ## Quick start
