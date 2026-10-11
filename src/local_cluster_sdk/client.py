@@ -8,8 +8,8 @@ class AIClusterClient:
     def __init__(self, host: str = "127.0.0.1", port: int = 11434):
         self.base_url = f"http://{host}:{port}"
         self.endpoint = f"{self.base_url}/v1/chat/completions"
-        # 10s connect window, 45s read window to handle extreme RAM-swapping passes safely
-        self.network_timeouts = (10.0, 45.0)
+        # 10s connect window, 120s read window to handle extreme RAM-swapping passes safely
+        self.network_timeouts = (10.0, 120.0)
 
     def execute(self, workload: AgentWorkload, resource: str) -> str:
         """Executes a non-streaming workload on a specified resource target."""
