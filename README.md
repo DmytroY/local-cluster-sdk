@@ -78,15 +78,25 @@ data["choices"][0]["message"]["content"]
 ```python
 from local_cluster_sdk import AIClusterClient
 
-client = AIClusterClient(host="127.0.0.1", port=11434)
+client = AIClusterClient(
+    host="192.168.200.23",
+    port=11434,
+    connect_timeout=2,
+    read_timeout=30)
 ```
 
-Parameters:
-- `host`: model server host, default is `"127.0.0.1"`
-- `port`: model server port, default is `11434`
+ Parameter* | Default value | Type |Description |
+|:-:|:-:|:-:|--|
+| host | 127.0.0.1 | string | model server host |
+| port | 11434 | integer | server port |
+| connect_timeout | 10.0 | float | model connection maximum timeout |
+| read_timeout | 120.0 | float | model response maximum timeout |
+
 
 Method:
 - `execute(workload, resource) -> str`
+
+where **resource** is your model identificator (name)
 
 This sends the task and returns the model output as a string.
 
@@ -102,92 +112,18 @@ workload = AgentWorkload(
     num_ctx=4096
 )
 ```
+ Parameter* | Default value | Type |Description |
+|:-:|:-:|:-:|--|
+| prompt |  | string | required the user question |
+| system_prompt |  | string | optional system message |
+| temperature | 0.2 | float | sampling temperature |
+| read_timeout | 4096 | integer | context window size |
 
 Fields:
 - `prompt`: the user question
 - `system_prompt`: optional system message
 - `temperature`: sampling temperature
 - `num_ctx`: context window size
-
-## Using other model providers
-
-This SDK is not tied to one provider. It only needs an OpenAI-compatible chat completion endpoint.
-
-That means you can point it to:
-- a local Ollama server
-- Groq
-- OpenRouter
-- any other OpenAI-compatible backend
-
-### Local example
-
-```python
-from local_cluster_sdk import AIClusterClient, AgentWorkload
-
-client = AIClusterClient(host="127.0.0.1", port=11434)
-
-workload = AgentWorkload(
-    prompt="Explain caching in a web app",
-    system_prompt="You are a backend engineer.",
-)
-
-result = client.execute(workload, resource="llama3.1")
-print(result)
-```
-
-### Groq example
-
-```python
-from local_cluster_sdk import AIClusterClient, AgentWorkload
-
-client = AIClusterClient(host="api.groq.com", port=443)
-
-workload = AgentWorkload(
-    prompt="Write a deployment checklist for a Python service",
-    system_prompt="You are a DevOps engineer.",
-)
-
-result = client.execute(workload, resource="llama-3.1-8b-instant")
-print(result)
-```
-
-### OpenRouter example
-
-```python
-from local_cluster_sdk import AIClusterClient, AgentWorkload
-
-client = AIClusterClient(host="openrouter.ai", port=443)
-
-workload = AgentWorkload(
-    prompt="Compare Python async patterns for a web API",
-    system_prompt="You are a backend engineer.",
-)
-
-result = client.execute(workload, resource="openai/gpt-4o-mini")
-print(result)
-```
-
-### Switching providers
-
-```python
-from local_cluster_sdk import AIClusterClient, AgentWorkload
-
-providers = {
-    "local": {"host": "127.0.0.1", "port": 11434},
-    "groq": {"host": "api.groq.com", "port": 443},
-    "openrouter": {"host": "openrouter.ai", "port": 443},
-}
-
-provider = "groq"
-config = providers[provider]
-client = AIClusterClient(**config)
-
-workload = AgentWorkload(prompt="Explain distributed tracing")
-result = client.execute(workload, resource="llama-3.1-8b-instant")
-print(result)
-```
-
-Note: this SDK currently uses a simple HTTP request and does not add provider-specific authentication or advanced request handling. For providers that need HTTPS or API keys, you may need a small wrapper or client update.
 
 ## Error handling
 
@@ -218,9 +154,25 @@ Exceptions:
 
 ## Testing
 
+Test with mock AI cluster response:
 ```bash
-pytest tests/
+pytest tests/test_mock_local.py
 ```
+
+Test with real AI cluster:
+```bash
+pytest tests\test_real_local.py
+```
+Note, if you perform test with real AI cluster, do not forget update in **tests\test_real_local.py** paramenters of your real AI cluster:
+
+```                                                    
+CORRECT_HOST = "192.168.100.23"
+WRONG_HOST = "192.168.99.99"
+PORT = 11434
+FAST_MODEL = "orchestrator"
+SLOW_MODEL = "coder"
+```
+
 
 The tests cover:
 - successful request handling
@@ -228,9 +180,13 @@ The tests cover:
 - read timeout when model swapping is slow
 
 ## Requirements
-
+for production:
 - Python 3.9+
-- `requests>=2.31.0`
+- requests>=2.31.0
+
+additionaly for testing:
+- pytest>=7.0.0
+- pytest-mock>=3.10.0
 
 ## License
 

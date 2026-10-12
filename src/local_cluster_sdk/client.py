@@ -5,11 +5,10 @@ from .models import AgentWorkload
 from .exceptions import ClusterUnreachableError, ModelSwapTimeoutError
 
 class AIClusterClient:
-    def __init__(self, host: str = "127.0.0.1", port: int = 11434):
+    def __init__(self, host: str = "127.0.0.1", port: int = 11434,connect_timeout: float = 10.0, read_timeout: float = 120.0):
         self.base_url = f"http://{host}:{port}"
         self.endpoint = f"{self.base_url}/v1/chat/completions"
-        # 10s connect window, 120s read window to handle extreme RAM-swapping passes safely
-        self.network_timeouts = (10.0, 120.0)
+        self.network_timeouts = (connect_timeout, read_timeout)
 
     def execute(self, workload: AgentWorkload, resource: str) -> str:
         """Executes a non-streaming workload on a specified resource target."""
