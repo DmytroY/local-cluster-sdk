@@ -17,8 +17,8 @@ def client():
 def workload():
     """Initializes a sample workload payload."""
     return AgentWorkload(
-        prompt="Write a Flask health endpoint",
-        system_prompt="You are a senior engineer."
+        prompt=f"The user wants a Flask app wich shows current time. Break this down into specific file creation tasks",
+        system_prompt="You are project manager."
     )
 
 # ==================== TEST CASES ====================
@@ -30,7 +30,7 @@ def test_execute_success(client, workload, requests_mock):
             {
                 "message": {
                     "role": "assistant",
-                    "content": "Here is your Flask endpoint..."
+                    "content": "Here is some response..."
                 }
             }
         ]
@@ -40,8 +40,8 @@ def test_execute_success(client, workload, requests_mock):
     any_url_pattern = re.compile(r'.*')
     requests_mock.post(any_url_pattern, json=mock_response, status_code=200)
     
-    result = client.execute(workload, resource="coder")
-    assert result == "Here is your Flask endpoint..."
+    result = client.execute(workload, resource="orchestrator")
+    assert result == "Here is some response..."
 
 def test_execute_firewall_unreachable(client, workload, requests_mock):
     """Simulates an iptables drop rule triggering a connection timeout."""

@@ -1,1 +1,3 @@
 .pytest_cache/*
+.aider*
+**/__pycache__/*
