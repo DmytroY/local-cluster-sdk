@@ -1,6 +1,6 @@
 # Local Cluster SDK
 
-Local Cluster SDK is a small Python library for sending AI tasks to a local model server or any OpenAI-compatible endpoint.
+Local Cluster SDK is a small Python library for sending AI tasks to a local model server.
 
 It is designed for simple use:
 - build a request payload
