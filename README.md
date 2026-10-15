@@ -90,7 +90,7 @@ client = AIClusterClient(
 | host | 127.0.0.1 | string | model server host |
 | port | 11434 | integer | server port |
 | connect_timeout | 10.0 | float | model connection maximum timeout |
-| read_timeout | 120.0 | float | model response maximum timeout |
+| num_ctx | 120.0 | float | model response maximum timeout |
 
 
 Method:
@@ -161,7 +161,7 @@ pytest tests/test_mock_local.py
 
 Test with real AI cluster:
 ```bash
-pytest tests\test_real_local.py
+pytest tests/test_real_local.py
 ```
 Note, if you perform test with real AI cluster, do not forget update in **tests\test_real_local.py** paramenters of your real AI cluster:
 
@@ -190,7 +190,7 @@ additionaly for testing:
 
 ## License
 
-This project does not currently specify a license.
+MIT license.
 
 ## Contributing
 
